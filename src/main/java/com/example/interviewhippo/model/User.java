@@ -22,8 +22,8 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank
-	@Column(unique = true)
+	@NotBlank // must have a value (null does not count)
+	@Column(unique = true) // value must be unique to the DB
 	private String username;
 
 	@NotBlank
@@ -33,11 +33,16 @@ public class User {
 	@Email
 	private String email;
 
+	// allows us to track milestones and potentially celebrate
+	// important dates (1 week, 1 month, 1 year)
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
+	// allows for disabling if user violates TOS
 	private boolean enabled = true;
 
+	// this ensures that "created at" field is set when a new user
+	// entity is persisted to the DB
 	@PrePersist
 	protected void onCreate() {
 		createdAt = LocalDateTime.now();
