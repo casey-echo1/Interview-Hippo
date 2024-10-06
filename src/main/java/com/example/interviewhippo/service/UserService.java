@@ -2,7 +2,6 @@ package com.example.interviewhippo.service;
 
 import com.example.interviewhippo.model.User;
 import com.example.interviewhippo.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -53,7 +52,8 @@ public class UserService {
 		userRepository.deleteById(id);
 	}
 
-	public boolean verifyPassword(User user, String password) {
+	public boolean verifyPassword(String username, String password) {
+		User user = getUserByUsername(username);
 		return user.getPassword().equals(passwordEncoder.encode(password));
 	}
 }
