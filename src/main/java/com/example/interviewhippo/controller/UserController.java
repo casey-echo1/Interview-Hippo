@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -17,7 +18,7 @@ public class UserController {
 
 	@PostMapping("/register")
 	public ResponseEntity<User> register(@RequestBody User user) {
-		return ResponseEntity.ok(userService.registerUser(user));
+		return ResponseEntity.ok(userService.createUser(user));
 	}
 
 	@GetMapping("/{id}")
@@ -26,14 +27,14 @@ public class UserController {
 	}
 
 	@GetMapping("/email/{email}")
-	public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-		return ResponseEntity.ok(userService.getUserByUsername(email));
+	public ResponseEntity<Optional<User>> getUserByEmail(@PathVariable String email) {
+		return ResponseEntity.ok(userService.findByEmail(email));
 	}
-
-	@GetMapping("/username/{username}")
-	public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-		return ResponseEntity.ok(userService.getUserByUsername(username));
-	}
+// TODO finish when I'm ready to add usernames
+//	@GetMapping("/username/{username}")
+//	public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+//		return ResponseEntity.ok(userService.getUserByUsername(username));
+//	}
 
 	@GetMapping
 	public ResponseEntity<List<User>> getAllUsers() {
@@ -50,11 +51,6 @@ public class UserController {
 	public ResponseEntity<User> deleteUser(@PathVariable Long id) {
 		userService.deleteUser(id);
 		return ResponseEntity.noContent().build();
-	}
-
-	@PostMapping("/verify")
-	public ResponseEntity<Boolean> verifyPassword(@RequestParam String username, @RequestParam String password) {
-		return ResponseEntity.ok(userService.verifyPassword(username, password));
 	}
 
 }

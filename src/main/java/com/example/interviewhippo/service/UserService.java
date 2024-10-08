@@ -13,9 +13,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -23,7 +24,8 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public User registerUser(User user) {
+	// creating new user
+	public User createUser(User user) {
 		if (userRepository.findByEmail(user.getEmail()).isPresent()) {
 			throw new RuntimeException("Username is already taken");
 		}
@@ -35,9 +37,10 @@ public class UserService implements UserDetailsService {
 		return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found."));
 	}
 
-	public User getUserByUsername(String username) {
-		return userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found."));
-	}
+//	// TODO make sure that people can login with email and password first
+//	public User getUserByUsername(String username) {
+//		return userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found."));
+//	}
 
 	public List<User> getAllUsers() {
 		return userRepository.findAll();
@@ -57,26 +60,9 @@ public class UserService implements UserDetailsService {
 		userRepository.deleteById(id);
 	}
 
-	public boolean verifyPassword(String username, String password) {
-		User user = getUserByUsername(username);
-		return user.getPassword().equals(passwordEncoder.encode(password));
+	public Optional<User> findByEmail(String email) {
+		return userRepository.findByEmail(email);
 	}
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByEmail(username)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
 
-		List<GrantedAuthority> authorities = new ArrayList<>();
-		if (user.isAdmin()) {
-			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-		}
-		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
-		return new org.springframework.security.core.userdetails.User(
-			user.getEmail(),
-			user.getPassword(),
-			authorities
-		);
-	}
 }
