@@ -22,15 +22,15 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank // must have a value (null does not count)
-	@Column(unique = true) // value must be unique to the DB
-	private String username;
-
 	@NotBlank
 	private String password;
 
 	@NotBlank
+	private String username;
+
+	@NotBlank
 	@Email
+	@Column(unique = true)
 	private String email;
 
 	// allows us to track milestones and potentially celebrate
@@ -47,4 +47,15 @@ public class User {
 	protected void onCreate() {
 		createdAt = LocalDateTime.now();
 	}
+
+	@Column(name = "is_admin")
+	private boolean isAdmin = false;
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+	public void setAdmin(boolean admin) {
+		isAdmin = admin;
+	}
+
 }
