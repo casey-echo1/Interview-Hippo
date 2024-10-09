@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import jakarta.validation.constraints.Email;
 import java.sql.Timestamp;
 
 
@@ -23,6 +24,7 @@ public class User {
 
 	private String username;
 
+	@Email(message = "Please provide a valid email address")
 	private String email;
 
 	// allows us to track milestones and potentially celebrate
