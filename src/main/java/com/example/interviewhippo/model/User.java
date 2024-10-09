@@ -1,5 +1,6 @@
 package com.example.interviewhippo.model;
 
+import com.example.interviewhippo.validation.ValidPassword;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@ValidPassword
 	private String password;
 
 	private String username;

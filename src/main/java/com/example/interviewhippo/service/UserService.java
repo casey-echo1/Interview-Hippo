@@ -1,17 +1,14 @@
 package com.example.interviewhippo.service;
 
+import com.example.interviewhippo.model.PasswordResetToken;
 import com.example.interviewhippo.model.User;
+import com.example.interviewhippo.repository.PasswordResetTokenRepository;
 import com.example.interviewhippo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +17,9 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private PasswordResetTokenRepository passwordResetTokenRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -62,6 +62,39 @@ public class UserService {
 
 	public Optional<User> findByEmail(String email) {
 		return userRepository.findByEmail(email);
+	}
+
+	public void createPasswordResetTokenForUser(Optional<User> userOptional, String token) {
+		userOptional.ifPresent(user -> {
+			PasswordResetToken myToken = new PasswordResetToken(token, user);
+			passwordResetTokenRepository.save(myToken);
+		});
+	}
+
+	public User getUserByPasswordResetToken(String token) {
+		PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+		return passwordResetToken != null ? passwordResetToken.getUser() : null;
+	}
+
+	public String validatePasswordResetToken(String token) {
+		PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
+
+		if (passToken == null) {
+			return "invalidToken";
+		}
+
+		Calendar cal = Calendar.getInstance();
+		if ((passToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+			passwordResetTokenRepository.delete(passToken);
+			return "expired";
+		}
+
+		return null;
+	}
+
+	public void changeUserPassword(User user, String password) {
+		user.setPassword(passwordEncoder.encode(password));
+		userRepository.save(user);
 	}
 
 
