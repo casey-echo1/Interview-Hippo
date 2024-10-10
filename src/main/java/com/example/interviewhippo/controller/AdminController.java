@@ -1,6 +1,7 @@
 package com.example.interviewhippo.controller;
 
 import com.example.interviewhippo.model.Question;
+import com.example.interviewhippo.model.User;
 import com.example.interviewhippo.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,20 @@ public class AdminController {
 		return ResponseEntity.ok().build();
 	}
 
+	@GetMapping("/users")
+	public ResponseEntity<List<User>> getAllUsers() {
+		return ResponseEntity.ok(adminService.getAllUsers());
+	}
+
+	@PostMapping("/users/{userId}/make-admin")
+	public ResponseEntity<User> makeUserAdmin(@PathVariable Long userId) {
+		return ResponseEntity.ok(adminService.assignAdminRole(userId));
+	}
+
+	@PostMapping("/users/{userId}/remove-admin")
+	public ResponseEntity<User> removeAdminRole(@PathVariable Long userId) {
+		return ResponseEntity.ok(adminService.removeAdminRole(userId));
+	}
 
 
 }

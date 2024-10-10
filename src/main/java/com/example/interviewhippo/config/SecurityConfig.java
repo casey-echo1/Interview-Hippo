@@ -11,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
@@ -25,7 +24,7 @@ public class SecurityConfig {
 		http
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/register").permitAll()
-				.requestMatchers("/api/admin/**").hasRole("ADMIN")
+				.requestMatchers("/api/admin/**", "/admin/**").hasRole("ADMIN")
 				.requestMatchers("/api/user/**").hasRole("USER")
 				.anyRequest().authenticated())
 			.formLogin(form -> form
