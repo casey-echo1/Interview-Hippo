@@ -5,16 +5,23 @@ import com.example.interviewhippo.model.User;
 import com.example.interviewhippo.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-@RestController
-@RequestMapping("/api/admin")
+@Controller
+@RequestMapping("/admin")
 public class AdminController {
 
 	@Autowired
 	private AdminService adminService;
+
+	@GetMapping("/dashboard")
+	public String dashboard() {
+		return "admin/dashboard";
+	}
 
 	@PostMapping("/questions")
 	public ResponseEntity submitNewQuestion(@RequestBody Question question) {
@@ -53,5 +60,18 @@ public class AdminController {
 		return ResponseEntity.ok(adminService.removeAdminRole(userId));
 	}
 
+	@GetMapping("/dashboard/users/count")
+	public ResponseEntity<Long> getTotalUsersCount() {
+		return ResponseEntity.ok(adminService.getTotalUsersCount());
+	}
 
+	@GetMapping("/dashboard/questions/count")
+	public ResponseEntity<Long> getTotalQuestionsCount() {
+		return ResponseEntity.ok(adminService.getTotalQuestionsCount());
+	}
+
+	@GetMapping("/dashboard/questions/category-count")
+	public ResponseEntity<Map<String, Long>> getQuestionCountByCategory() {
+		return ResponseEntity.ok(adminService.getQuestionCountByCategory());
+	}
 }

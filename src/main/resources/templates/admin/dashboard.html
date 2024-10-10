@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="eng">
+<head>
+	<title>Admin Dashboard</title>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<style>
+		.dashboard-container {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-around;
+		}
+		.dashboard-item {
+			width: 45%;
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+<body>
+<h1>Admin Dashboard</h1>
+
+<div class="dashboard-container">
+	<div class="dashboard-item">
+		<h2>Total Users</h2>
+		<p id="totalUsers"></p>
+	</div>
+	<div class="dashboard-item">
+		<h2>Total Questions</h2>
+		<p id="totalQuestions"></p>
+	</div>
+	<div class="dashboard-item">
+		<h2>Questions by Category</h2>
+		<canvas id="categoryChart"></canvas>
+	</div>
+	<div class="dashboard-item">
+		<h2>Recent Users</h2>
+		<ul id="recentUsers"></ul>
+	</div>
+</div>
+
+<script>
+	function loadDashboardData() {
+		axios.get('/api/admin/dashboard/users/count')
+			.then(response => {
+				document.getElementById('totalUsers').textContent = response.data;
+			});
+
+		axios.get('/api/admin/dashboard/questions/count')
+			.then(response => {
+				document.getElementById('totalQuestions').textContent = response.data;
+			});
+
+		axios.get('/api/admin/dashboard/questions/category-count')
+			.then(response => {
+				const data = response.data;
+				const ctx = document.getElementById('categoryChart').getContext('2d');
+				new Chart(ctx, {
+					type: 'bar',
+					data: {
+						labels: Object.keys(data),
+						datasets: [{
+							label: 'Questions per Category',
+							data: Object.values(data),
+							backgroundColor: 'rgba(75, 192, 192, 0.6)'
+						}]
+					},
+					options: {
+						scales: {
+							y: {
+								beginAtZero: true
+							}
+						}
+					}
+				});
+			});
+
+		axios.get('/api/admin/dashboard/users/recent')
+			.then(response => {
+				const users = response.data;
+				const userList = document.getElementById('recentUsers');
+				userList.innerHTML = '';
+				users.forEach(user => {
+					const li = document.createElement('li');
+					li.textContent = `${user.username} (${user.email})`;
+					userList.appendChild(li);
+				});
+			});
+	}
+
+	// Load dashboard data when the page loads
+	loadDashboardData();
+</script>
+</body>
+</html>
