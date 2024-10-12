@@ -6,6 +6,7 @@ import com.example.interviewhippo.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +19,24 @@ public class AdminController {
 	@Autowired
 	private AdminService adminService;
 
+//	@GetMapping("/dashboard")
+//	public String dashboard() {
+//		return "admin/dashboard";
+//	}
+
 	@GetMapping("/dashboard")
-	public String dashboard() {
+	public String showDashboard(Model model) {
+		model.addAttribute("newQuestion", new Question());
+		model.addAttribute("questions", adminService.getAllQuestions());
 		return "admin/dashboard";
+	}
+
+
+
+	@PostMapping("/questions/add")
+	public String addQuestion(@ModelAttribute("newQuestion") Question question) {
+		adminService.submitNewQuestion(question);
+		return "redirect:/admin/dashboard";
 	}
 
 	@PostMapping("/questions")

@@ -1,94 +1,87 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="eng">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title>Admin Dashboard</title>
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<style>
-		.dashboard-container {
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: space-around;
+		.form-group {
+			margin-bottom: 15px;
 		}
-		.dashboard-item {
-			width: 45%;
-			margin-bottom: 20px;
+		label {
+			display: block;
+			margin-bottom: 5px;
+		}
+		input[type="text"], textarea {
+			width: 100%;
+			padding: 8px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+		}
+		button {
+			padding: 10px 15px;
+			background-color: #007bff;
+			color: white;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+		th, td {
+			border: 1px solid #ddd;
+			padding: 8px;
+			text-align: left;
+		}
+		th {
+			background-color: #f2f2f2;
 		}
 	</style>
 </head>
 <body>
 <h1>Admin Dashboard</h1>
 
-<div class="dashboard-container">
-	<div class="dashboard-item">
-		<h2>Total Users</h2>
-		<p id="totalUsers"></p>
+<h2>Add New Question</h2>
+<form th:action="@{/admin/questions/add}" th:object="${newQuestion}" method="post">
+	<div class="form-group">
+		<label for="content">Question:</label>
+		<textarea id="content" th:field="*{content}" rows="4" required></textarea>
 	</div>
-	<div class="dashboard-item">
-		<h2>Total Questions</h2>
-		<p id="totalQuestions"></p>
+
+	<div class="form-group">
+		<label for="answer">Answer:</label>
+		<textarea id="answer" th:field="*{answer}" rows="4" required></textarea>
 	</div>
-	<div class="dashboard-item">
-		<h2>Questions by Category</h2>
-		<canvas id="categoryChart"></canvas>
+
+	<div class="form-group">
+		<label for="category">Category:</label>
+		<input type="text" id="category" th:field="*{category}" required>
 	</div>
-	<div class="dashboard-item">
-		<h2>Recent Users</h2>
-		<ul id="recentUsers"></ul>
-	</div>
-</div>
 
-<script>
-	function loadDashboardData() {
-		axios.get('/api/admin/dashboard/users/count')
-			.then(response => {
-				document.getElementById('totalUsers').textContent = response.data;
-			});
+	<button type="submit">Add Question</button>
+</form>
 
-		axios.get('/api/admin/dashboard/questions/count')
-			.then(response => {
-				document.getElementById('totalQuestions').textContent = response.data;
-			});
-
-		axios.get('/api/admin/dashboard/questions/category-count')
-			.then(response => {
-				const data = response.data;
-				const ctx = document.getElementById('categoryChart').getContext('2d');
-				new Chart(ctx, {
-					type: 'bar',
-					data: {
-						labels: Object.keys(data),
-						datasets: [{
-							label: 'Questions per Category',
-							data: Object.values(data),
-							backgroundColor: 'rgba(75, 192, 192, 0.6)'
-						}]
-					},
-					options: {
-						scales: {
-							y: {
-								beginAtZero: true
-							}
-						}
-					}
-				});
-			});
-
-		axios.get('/api/admin/dashboard/users/recent')
-			.then(response => {
-				const users = response.data;
-				const userList = document.getElementById('recentUsers');
-				userList.innerHTML = '';
-				users.forEach(user => {
-					const li = document.createElement('li');
-					li.textContent = `${user.username} (${user.email})`;
-					userList.appendChild(li);
-				});
-			});
-	}
-
-	// Load dashboard data when the page loads
-	loadDashboardData();
-</script>
+<h2>Existing Questions</h2>
+<table>
+	<thead>
+	<tr>
+		<th>ID</th>
+		<th>Question</th>
+		<th>Category</th>
+		<th>Actions</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr th:each="question : ${questions}">
+		<td th:text="${question.id}"></td>
+		<td th:text="${question.content}"></td>
+		<td th:text="${question.category}"></td>
+		<td>
+			<a th:href="@{/admin/questions/edit/{id}(id=${question.id})}">Edit</a>
+			<a th:href="@{/admin/questions/delete/{id}(id=${question.id})}" onclick="return confirm('Are you sure you want to delete this question?')">Delete</a>
+		</td>
+	</tr>
+	</tbody>
+</table>
 </body>
 </html>

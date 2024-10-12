@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Interview Questions</title>
+	<style>
+		.question {
+			margin-bottom: 20px;
+			padding: 10px;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+		}
+	</style>
+</head>
+<body>
+<h1>Interview Questions</h1>
+<div th:each="question : ${questions}" class="question">
+	<h3 th:text="${question.content}"></h3>
+	<p><strong>Category:</strong> <span th:text="${question.category}"></span></p>
+</div>
+</body>
+</html>

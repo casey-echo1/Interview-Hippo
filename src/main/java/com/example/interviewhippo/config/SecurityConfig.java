@@ -25,7 +25,9 @@ public class SecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/register").permitAll()
 				.requestMatchers("/api/admin/**", "/admin/**").hasRole("ADMIN")
+				.requestMatchers("/interview/questions").hasAnyRole("USER", "ADMIN")
 				.requestMatchers("/api/user/**").hasRole("USER")
+				.requestMatchers("/interview/questions").authenticated()
 				.anyRequest().authenticated())
 			.formLogin(form -> form
 				.loginPage("/login")
@@ -42,6 +44,9 @@ public class SecurityConfig {
 			.logout(logout -> logout
 				.logoutSuccessUrl("/login")
 				.permitAll()
+			)
+			.csrf(csrf -> csrf
+				.ignoringRequestMatchers("/api/**")  // Disable CSRF for API endpoints
 			)
 			.userDetailsService(customUserDetailsService);
 
