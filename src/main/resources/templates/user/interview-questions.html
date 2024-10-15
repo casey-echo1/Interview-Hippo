@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interview Question</title>
-    <link rel="stylesheet" href="/src/main/resources/static/css/interview_styles.css">
+    <link rel="stylesheet" href="/css/interview_styles.css">
 </head>
 <body>
     <div class="interview-question-container">
         <h1>Interview Question</h1>
-        
+
         <div th:if="${question}" class="question">
             <h2 th:text="${question.content}"></h2>
             <p><strong>Category:</strong> <span th:text="${question.category}"></span></p>
         </div>
-        
+
         <form th:action="@{/interview/submit-answer}" method="post">
             <input type="hidden" name="questionId" th:value="${question.id}">
             <div class="form-group">
@@ -23,7 +23,7 @@
             </div>
             <button type="submit">Submit Answer</button>
         </form>
-        
+
         <a href="/interview/questions" class="btn">Next Question</a>
     </div>
 </body>
