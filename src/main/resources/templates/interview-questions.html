@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Interview Questions</title>
-	<style>
-		.question {
-			margin-bottom: 20px;
-			padding: 10px;
-			border: 1px solid #ddd;
-			border-radius: 5px;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Question</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<h1>Interview Questions</h1>
-<div th:each="question : ${questions}" class="question">
-	<h3 th:text="${question.content}"></h3>
-	<p><strong>Category:</strong> <span th:text="${question.category}"></span></p>
-</div>
+    <div class="interview-question-container">
+        <h1>Interview Question</h1>
+        
+        <div th:if="${question}" class="question">
+            <h2 th:text="${question.content}"></h2>
+            <p><strong>Category:</strong> <span th:text="${question.category}"></span></p>
+        </div>
+        
+        <form th:action="@{/interview/submit-answer}" method="post">
+            <input type="hidden" name="questionId" th:value="${question.id}">
+            <div class="form-group">
+                <label for="userAnswer">Your Answer:</label>
+                <textarea id="userAnswer" name="userAnswer" rows="5" cols="50" required></textarea>
+            </div>
+            <button type="submit">Submit Answer</button>
+        </form>
+        
+        <a href="/interview/questions" class="btn">Next Question</a>
+    </div>
 </body>
 </html>
