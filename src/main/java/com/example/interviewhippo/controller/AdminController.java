@@ -47,15 +47,15 @@ public class AdminController {
 	public ResponseEntity<List<Question>> getAllQuestions() {
 		return ResponseEntity.ok(adminService.getAllQuestions());
 	}
-	@GetMapping("/questions/{id}")
-	public ResponseEntity<Question> getQuestionById(@PathVariable Long id) {
-		return ResponseEntity.ok(adminService.getQuestionById(id));
-	}
-	@PutMapping("/questions/{id}")
+//	@GetMapping("/questions/{id}")
+//	public ResponseEntity<Question> getQuestionById(@PathVariable Long id) {
+//		return ResponseEntity.ok(adminService.getQuestionById(id));
+//	}
+	@PostMapping("/questions/edit/{id}")
 	public ResponseEntity<Question> updateQuestion(@PathVariable Long id) {
 		return ResponseEntity.ok(adminService.updateQuestion(id));
 	}
-	@DeleteMapping("/questions/{id}")
+	@PostMapping("/questions/delete/{id}")
 	public ResponseEntity<?> deleteQuestion(@PathVariable Long id) {
 		adminService.deleteQuestion(id);
 		return ResponseEntity.ok().build();
