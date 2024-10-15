@@ -56,9 +56,9 @@ public class AdminController {
 		return ResponseEntity.ok(adminService.updateQuestion(id));
 	}
 	@PostMapping("/questions/delete/{id}")
-	public ResponseEntity<?> deleteQuestion(@PathVariable Long id) {
+	public String deleteQuestion(@PathVariable Long id) {
 		adminService.deleteQuestion(id);
-		return ResponseEntity.ok().build();
+		return "redirect:/admin/dashboard";
 	}
 
 	@GetMapping("/users")
