@@ -8,25 +8,31 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+	private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+
 	@Autowired
 	private UserRepository userRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		logger.info("Attempting to load user by email: {}", email);
 		User user = userRepository.findByEmail(email)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+			.orElseThrow(() -> {
+				logger.error("User not found with email: {}", email);
+				return new UsernameNotFoundException("User not found with email: " + email);
+			});
 
-		String roleWithPrefix = "ROLE_USER"; // Default role
-		if (user.getRole() != null) {
-			String role = user.getRole().name();
-			roleWithPrefix = role.startsWith("ROLE_") ? role : "ROLE_" + role;
-		}
+		logger.info("User found: {}", user.getEmail());
+		String roleWithPrefix = "ROLE_" + user.getRole().name();
+		logger.info("User role: {}", roleWithPrefix);
 
 		return org.springframework.security.core.userdetails.User
 			.withUsername(user.getEmail())
@@ -35,4 +41,3 @@ public class CustomUserDetailsService implements UserDetailsService {
 			.build();
 	}
 }
-

@@ -37,6 +37,8 @@ public class User {
 	private boolean enabled = true;
 
 
+
+
 	@Enumerated(EnumType.STRING)
 	private Role role = Role.ADMIN;
 

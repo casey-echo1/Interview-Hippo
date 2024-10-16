@@ -10,11 +10,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+
+	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
@@ -25,29 +30,30 @@ public class SecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/register").permitAll()
 				.requestMatchers("/api/admin/**", "/admin/**").hasRole("ADMIN")
-				.requestMatchers("/interview/questions").hasAnyRole("USER", "ADMIN")
-				.requestMatchers("/api/user/**").hasRole("USER")
-				.requestMatchers("/interview/questions").authenticated()
+				.requestMatchers("/api/user/**", "/user/**").hasAnyRole("USER", "ADMIN")
 				.anyRequest().authenticated())
 			.formLogin(form -> form
 				.loginPage("/login")
 				.permitAll()
 				.successHandler((request, response, authentication) -> {
-					if (authentication.getAuthorities().stream()
-						.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+					logger.info("User {} successfully authenticated", authentication.getName());
+					var authorities = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+					if (authorities.contains("ROLE_ADMIN")) {
 						response.sendRedirect("/admin/dashboard");
 					} else {
-						response.sendRedirect("/interview/questions");
+						response.sendRedirect("/user/dashboard");
 					}
+				})
+				.failureHandler((request, response, exception) -> {
+					logger.error("Authentication failed: {}", exception.getMessage());
+					response.sendRedirect("/login?error");
 				})
 			)
 			.logout(logout -> logout
 				.logoutSuccessUrl("/login")
-				.permitAll()
-			)
+				.permitAll())
 			.csrf(csrf -> csrf
-				.ignoringRequestMatchers("/api/**")  // Disable CSRF for API endpoints
-			)
+				.ignoringRequestMatchers("/api/**"))
 			.userDetailsService(customUserDetailsService);
 
 		return http.build();
