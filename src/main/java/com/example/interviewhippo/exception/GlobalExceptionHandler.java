@@ -35,6 +35,13 @@ public class GlobalExceptionHandler {
 		return "redirect:/user/practice";
 	}
 
+	@ExceptionHandler(NoResourceFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+			.body("Resource not found");
+	}
+
 //	@ExceptionHandler(NoResourceFoundException.class)
 //	@ResponseStatus(HttpStatus.NOT_FOUND)
 //	public ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException ex) {

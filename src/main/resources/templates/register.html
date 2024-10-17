@@ -4,131 +4,43 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Register - Interview Hippo</title>
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background-color: #f4f4f4;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100vh;
-			margin: 0;
-		}
-		.register-container {
-			background-color: white;
-			padding: 2rem;
-			border-radius: 5px;
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-			width: 300px;
-		}
-		h2 {
-			text-align: center;
-			color: #333;
-		}
-		form {
-			display: flex;
-			flex-direction: column;
-		}
-		label {
-			margin-bottom: 0.5rem;
-			color: #666;
-		}
-		input {
-			padding: 0.5rem;
-			margin-bottom: 1rem;
-			border: 1px solid #ddd;
-			border-radius: 3px;
-		}
-		button {
-			padding: 0.5rem;
-			background-color: #28a745;
-			color: white;
-			border: none;
-			border-radius: 3px;
-			cursor: pointer;
-		}
-		button:hover {
-			background-color: #218838;
-		}
-		.error {
-			color: red;
-			font-size: 0.8rem;
-			margin-top: -0.5rem;
-			margin-bottom: 0.5rem;
-		}
-	</style>
+	<link rel="stylesheet" href="/src/main/resources/static/css/register.css">
 </head>
 <body>
 <div class="register-container">
 	<h2>Register</h2>
-	<form th:action="@{/register}" method="post" id="registerForm">
+	<form th:action="@{/register}" th:object="${user}" method="post" id="registerForm">
 		<label for="username">Username:</label>
-		<input type="text" id="username" name="username" required>
+		<input type="text" id="username" th:field="*{username}" required>
 		<span class="error" id="usernameError"></span>
 
 		<label for="email">Email:</label>
-		<input type="email" id="email" name="email" required>
+		<input type="email" id="email" th:field="*{email}" required>
 		<span class="error" id="emailError"></span>
 
 		<label for="password">Password:</label>
-		<input type="password" id="password" name="password" required>
+		<input type="password" id="password" th:field="*{password}" required>
 		<span class="error" id="passwordError"></span>
 
 		<label for="confirmPassword">Confirm Password:</label>
 		<input type="password" id="confirmPassword" name="confirmPassword" required>
 		<span class="error" id="confirmPasswordError"></span>
 
+		<div class="form-group">
+			<label for="role">Role:</label>
+			<select id="role" th:field="*{role}" required>
+				<option value="">Select a role</option>
+				<option th:each="roleOpt : ${allRoles}"
+						th:value="${roleOpt}"
+						th:text="${roleOpt}">
+				</option>
+			</select>
+		</div>
+
 		<button type="submit">Register</button>
 	</form>
 </div>
 
-<script>
-	document.getElementById('registerForm').addEventListener('submit', function(e) {
-		let valid = true;
-		const username = document.getElementById('username').value;
-		const email = document.getElementById('email').value;
-		const password = document.getElementById('password').value;
-		const confirmPassword = document.getElementById('confirmPassword').value;
-
-		// Username validation
-		if (username.length < 3) {
-			document.getElementById('usernameError').textContent = 'Username must be at least 3 characters long';
-			valid = false;
-		} else {
-			document.getElementById('usernameError').textContent = '';
-		}
-
-		// Email validation
-		if (!email.match(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)) {
-			document.getElementById('emailError').textContent = 'Please enter a valid email address';
-			valid = false;
-		} else {
-			document.getElementById('emailError').textContent = '';
-		}
-
-		// Password validation
-		if (password.length < 8) {
-			document.getElementById('passwordError').textContent = 'Password must be at least 8 characters long';
-			valid = false;
-		} else if (!password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/)) {
-			document.getElementById('passwordError').textContent = 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character';
-			valid = false;
-		} else {
-			document.getElementById('passwordError').textContent = '';
-		}
-
-		// Confirm password validation
-		if (password !== confirmPassword) {
-			document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
-			valid = false;
-		} else {
-			document.getElementById('confirmPasswordError').textContent = '';
-		}
-
-		if (!valid) {
-			e.preventDefault();
-		}
-	});
-</script>
+<script src="/static/validation.js"></script>
 </body>
 </html>

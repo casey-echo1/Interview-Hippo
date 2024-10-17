@@ -7,7 +7,9 @@
 <body>
     <h1>Admin Dashboard</h1>
 
-    <h2>Add New Question</h2>
+	<a href="/user/practice" class="btn btn-primary">Let's Practice</a>
+
+	<h2>Add New Question</h2>
     <form th:action="@{/admin/questions/add}" th:object="${newQuestion}" method="post">
         <div class="form-group">
             <label for="content">Question:</label>

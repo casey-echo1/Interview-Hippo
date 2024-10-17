@@ -2,10 +2,7 @@ package com.example.interviewhippo.model;
 
 import com.example.interviewhippo.validation.ValidPassword;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import jakarta.validation.constraints.Email;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -53,8 +50,10 @@ public class User {
 	}
 
 
-	@Enumerated(EnumType.STRING)
-	private Role role = Role.ADMIN;
+	//@Enumerated(EnumType.STRING)
+	@Setter
+	@Getter
+	private Role role;
 
 }
 

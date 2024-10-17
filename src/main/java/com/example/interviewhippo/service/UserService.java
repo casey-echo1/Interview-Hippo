@@ -27,7 +27,7 @@ public class UserService {
 	// creating new user
 	public User createUser(User user) {
 		if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-			throw new RuntimeException("Username is already taken");
+			throw new RuntimeException("Email is already taken");
 		}
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
