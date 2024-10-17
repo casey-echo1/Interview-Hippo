@@ -33,11 +33,7 @@ public class UserController {
 	public ResponseEntity<Optional<User>> getUserByEmail(@PathVariable String email) {
 		return ResponseEntity.ok(userService.findByEmail(email));
 	}
-// TODO finish when I'm ready to add usernames
-//	@GetMapping("/username/{username}")
-//	public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-//		return ResponseEntity.ok(userService.getUserByUsername(username));
-//	}
+
 
 	@GetMapping
 	public ResponseEntity<List<User>> getAllUsers() {

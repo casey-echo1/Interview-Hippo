@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import jakarta.validation.constraints.Email;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -36,7 +38,19 @@ public class User {
 	// allows for disabling if user violates TOS
 	private boolean enabled = true;
 
+	@Enumerated(EnumType.STRING)
+	private UserState currentState = UserState.ANSWERING;
 
+	@OneToMany(mappedBy = "user")
+	private List<Answer> answers = new ArrayList<>();
+
+	@OneToMany(mappedBy = "reviewer")
+	private List<Review> reviews = new ArrayList<>();
+
+	public enum UserState {
+		ANSWERING,
+		REVIEWING
+	}
 
 
 	@Enumerated(EnumType.STRING)
@@ -61,3 +75,4 @@ public class User {
 //	public void setAdmin(boolean admin) {
 //		isAdmin = admin;
 //	}
+

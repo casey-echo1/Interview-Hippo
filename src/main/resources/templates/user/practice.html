@@ -1,23 +1,20 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-	<title>Practice Interview Question</title>
-	<link rel="stylesheet" th:href="@{/css/interview_styles.css}">
-</head>
-<body>
-<div class="interview-question-container">
-	<h1>Practice Question</h1>
-	<div class="question">
-		<h2 th:text="${question.content}">Question content goes here</h2>
-	</div>
-	<form>
-		<div class="form-group">
-			<label for="answer">Your Answer:</label>
-			<textarea id="answer" name="answer" rows="5"></textarea>
-		</div>
+<h1>Practice</h1>
+
+<p th:text="${message}"></p>
+
+<div th:if="${question}">
+	<h2 th:text="${question.content}"></h2>
+	<p>Category: <span th:text="${question.category}"></span></p>
+</div>
+
+<div th:if="${userState == T(com.example.interviewhippo.model.User.UserState).ANSWERING}">
+	<form th:action="@{/user/practice/submit-answer}" method="post">
+		<input type="hidden" name="questionId" th:value="${question.id}">
+		<textarea name="answerContent" rows="5" cols="50"></textarea>
 		<button type="submit">Submit Answer</button>
 	</form>
-	<a href="/user/practice" class="btn">Next Question</a>
 </div>
-</body>
-</html>
+
+<div th:if="${userState == T(com.example.interviewhippo.model.User.UserState).REVIEWING}">
+	<!-- TODO Add the review form here -->
+</div>

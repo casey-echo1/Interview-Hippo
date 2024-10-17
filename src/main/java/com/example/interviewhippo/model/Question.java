@@ -29,4 +29,10 @@ public class Question {
 
 	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
 	private List<Answer> answers = new ArrayList<>();
+
+	private int answerCount = 0;
+
+	public void incrementAnswerCount() {
+		this.answerCount++;
+	}
 }

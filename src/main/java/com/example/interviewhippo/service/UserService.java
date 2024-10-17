@@ -33,9 +33,7 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	public User getUserById(Long id) {
-		return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found."));
-	}
+
 
 //	// TODO make sure that people can login with email and password first
 //	public User getUserByUsername(String username) {
@@ -96,6 +94,13 @@ public class UserService {
 		user.setPassword(passwordEncoder.encode(password));
 		userRepository.save(user);
 	}
+	public User getUserById(Long id) {
+		return userRepository.findById(id)
+			.orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+	}
 
-
+	public User getUserByEmail(String email) {
+		return userRepository.findByEmail(email)
+			.orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+	}
 }
