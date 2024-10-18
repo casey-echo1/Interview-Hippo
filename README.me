@@ -1,0 +1,86 @@
+# InterviewHippo
+
+InterviewHippo is a Spring Boot application designed to help users practice and improve their interview skills through a question-and-answer system with peer reviews.
+
+## Features
+
+- User registration and authentication
+- Admin and user roles with different permissions
+- Practice answering interview questions
+- Peer review system for answers
+- Password reset functionality
+- Dashboard for users and admins
+
+## Technical Stack
+
+- Java 17
+- Spring Boot
+- Spring Security
+- Spring Data JPA
+- Lombok
+- MySQL
+- Thymeleaf
+
+## Getting Started
+
+### Prerequisites
+
+- JDK 17 or later
+- Maven
+- MySQL
+
+### Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/interview-hippo.git
+   ```
+
+2. Navigate to the project directory:
+   ```
+   cd interview-hippo
+   ```
+
+3. Configure the database connection in `src/main/resources/application.properties`:
+   ```
+   spring.datasource.url=jdbc:postgresql://localhost:5432/interviewhippo
+   spring.datasource.username=your_username
+   spring.datasource.password=your_password
+   ```
+
+4. Build the project:
+   ```
+   mvn clean install
+   ```
+
+5. Run the application:
+   ```
+   mvn spring-boot:run
+   ```
+
+The application should now be running on `http://localhost:8080`.
+
+## Usage
+
+1. Register a new user account or log in with existing credentials.
+2. As a user, you can:
+   - Answer interview questions
+   - Review other users' answers
+   - View your dashboard
+
+3. As an admin, you can:
+   - Manage users (assign/remove admin roles)
+   - Manage questions (add, edit, delete)
+   - View admin dashboard with statistics
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Acknowledgments
+
+- Special thanks to the Spring Boot and Java communities for their excellent documentation and support.

@@ -15,7 +15,8 @@ import java.util.List;
 @Table(name = "questions")
 public class Question {
 
-	@Id@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(nullable = false)
@@ -26,6 +27,10 @@ public class Question {
 
 	@Column(nullable = false)
 	private String category;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "question_id", nullable = false)
+	private Question question;
 
 	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
 	private List<Answer> answers = new ArrayList<>();
